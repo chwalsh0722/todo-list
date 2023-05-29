@@ -1,0 +1,94 @@
+* {
+  padding: 0px;
+  margin: 0px;
+}
+
+ul {
+  font-size: 28px;
+}
+
+ul input[type=checkbox] {
+  width: 20px;
+  height: 20px;
+  margin-bottom: 20px;
+}
+
+li {
+  list-style-type: none;
+  margin-left: 20px;
+  font-size: 20px;
+}
+
+li input[type=checkbox] {
+  width: 16px;
+  height: 16px;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+}
+
+#content {
+  width: 100%;
+  height: min(100%);
+  background-color: rgb(8, 143, 143);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+#center-page {
+  width: max(60%, 750px);
+  height: 2000px;
+  background-color: white;
+  margin-top: 60px;
+  margin-bottom: 24px;
+  flex: 1;
+  border-radius: 24px;
+  padding-left: 30px;
+  padding-right: 30px;
+  grid-template-columns: 1fr;
+  grid-template-rows: 100px 1fr;
+}
+
+#footer {
+  width: 100%;
+  height: 60px;
+  background-color: rgb(255, 102, 0);
+}
+
+#page-header {
+  font-size: 48px;
+  text-align: center;
+  grid-row-start: 1;
+  grid-row-end: 1;
+  margin-top: 30px;
+}
+
+#page-body {
+  grid-row-start: 2;
+  grid-row-end: 2;
+  margin-top: 20px;
+}
+
+.grid-display {
+  display: grid;
+}
+
+.font-andale {
+  font-family: "Andale Mono", monospace;
+}
+
+.project {
+
+}
