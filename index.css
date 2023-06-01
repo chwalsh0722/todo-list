@@ -3,14 +3,22 @@
   margin: 0px;
 }
 
+button {
+  cursor: pointer;
+}
+
 ul {
   font-size: 28px;
+}
+
+input[type=checkbox] {
+  cursor: pointer;
 }
 
 ul input[type=checkbox] {
   width: 20px;
   height: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 li {
@@ -68,11 +76,34 @@ body {
 }
 
 #page-header {
-  font-size: 48px;
-  text-align: center;
   grid-row-start: 1;
   grid-row-end: 1;
   margin-top: 30px;
+  grid-template-columns: 10% 10% 10% 10% 10% 10% 10% 10% 10% 10%;
+  grid-template-rows: 1fr;
+}
+
+#header-text {
+  font-size: 48px;
+  display: inline;
+  grid-column-start: 4;
+  grid-column-end: 8;
+  text-align: center;
+}
+
+#new-project-button {
+  grid-column-start: 8;
+  grid-column-end: 11;
+  font-size: 18px;
+  height: 40px;
+  width: 170px;
+  align-self: center;
+  font-weight: bold;
+  margin-left: 20px;
+  border-radius: 8px;
+  border: none;
+  background-color:rgb(255, 102, 0);
+  color: white;
 }
 
 #page-body {
@@ -90,5 +121,12 @@ body {
 }
 
 .project {
+  margin-bottom: 20px;
+}
 
+.popup-background {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(143, 142, 142, 0.50);
+  position: absolute;
 }

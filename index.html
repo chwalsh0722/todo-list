@@ -11,17 +11,38 @@
   <script src="./index.js"></script>
   <div id="content" class="flex-column">
     <div id="center-page" class="grid-display">
-      <div id="page-header" class="font-andale">Header</div>
+      <div id="page-header" class="font-andale grid-display">
+        <div id="header-text">Header</div>
+        <button id="new-project-button" class="font-andale">+ New Project</button>
+      </div>
       <div id="page-body" class="font-andale">
         <ul class="project">
           <form action="#">
             <input type="checkbox" id="project-1">
-            <label for="project-1">PROJECT 1</label>
+            <label for="project-1">PROJECT</label>
           </form>
           <li>
             <form action="#">
               <input type="checkbox" id="task-1">
-              <label for="task-1">TASK 1</label>
+              <label for="task-1">TASK</label>
+            </form>
+          </li>
+          <li>
+            <form action="#">
+              <input type="checkbox" id="task-1">
+              <label for="task-1">TASK</label>
+            </form>
+          </li>
+        </ul>
+        <ul class="project">
+          <form action="#">
+            <input type="checkbox" id="project-1">
+            <label for="project-1">PROJECT</label>
+          </form>
+          <li>
+            <form action="#">
+              <input type="checkbox" id="task-1">
+              <label for="task-1">TASK</label>
             </form>
           </li>
         </ul>
@@ -29,5 +50,6 @@
     </div>
     <div id="footer"></div>
   </div>
+  <div class="popup-background"></div>
 </body>
 </html>
