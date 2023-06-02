@@ -32,22 +32,31 @@ const project = new Project('my', 'dad', 'is', 'gay');
 console.log(project.description);
 
 function addClasses(element, classes) {
+  if (classes[0] === '') {
+    return;
+  }
   for (let i = 0; i < classes.length; i++) {
     element.classList.add(classes[i]);
   }
 }
 
-function divCreate(id, ...classes) {
+function divCreate(id, text, ...classes) {
   const div = document.createElement('div');
   div.id = id;
+  if (text != '') {
+    div.innerHTML = text;
+  }
   addClasses(div, classes);
   return div;
 }
 
-function buttonCreate(id, onclick, ...classes) {
+function buttonCreate(id, onclick, buttonLabel, ...classes) {
   const button = document.createElement('button');
   button.id = id;
-  button.onclick(onclick);
+  button.innerHTML = buttonLabel;
+  if (onclick != '') {
+    button.onclick = onclick;
+  }
   addClasses(button, classes);
   return button;
 }
@@ -76,36 +85,72 @@ function inputCreate(id, type) {
   const input = document.createElement('input');
   input.id = id;
   input.type = type;
-  return type;
+  return input;
 }
 
-function labelCreate(id, labelFor) {
+function labelCreate(id, labelFor, text) {
   const label = document.createElement('label');
   label.id = id;
   label.for = labelFor;
+  label.innerHTML = text;
   return label;
 }
 
-// const pageElement = (type, id, src, url, ...classes) => {
-//   const type = type;
-//   const id = id;
-//   const src = src;
-//   const url = url;
-//   const classes = [classes];
-//   let numClasses = classes.length;
+function appendChildren(parent, ...children) {
+  for (let i = 0; i < children.length; i++) {
+    parent.appendChild(children[i]);
+  }
+}
 
-//   const getElementType = () => { return type; };
-//   const getElementID = () => { return id; };
-//   const getElementSrc = () => { return src; };
-//   // TODO: function for returning all element's classes.
+function createNewProject() {
+  var taskNum = 0;
+  const projectFormID = "project-" + numProjects + "-form";
+  const projectInputID = "project-" + numProjects + "-input";
+  const projectLabelID = "project-" + numProjects + "-label";
+  const ul = ulCreate('project');
+  const projectForm = formCreate(projectFormID, '#');
+  const projectInput = inputCreate(projectInputID, 'checkbox');
+  const projectLabel = labelCreate(projectLabelID, projectInputID, 'PROJECT');
 
-//   return {getElementType, getElementID, getElementSrc};
-// }
+  appendChildren(pageBody, ul);
+  appendChildren(ul, projectForm);
+  appendChildren(projectForm, projectInput, projectLabel);
+  
+  taskNum = createNewTask(taskNum, ul);
+  taskNum = createNewTask(taskNum, ul);
+  
+  numProjects++;
+  console.log("new project created");
+}
 
-// function pageLoad() {
-//   // Create objects for all page elements.
-//   const centerPage = pageElement('div', 'center-page', '', '', 'grid-display');
+function createNewTask(taskNum, project) {
+  const taskFormID = "task-" + taskNum + "-form";
+  const taskInputID = "task-" + taskNum + "-input";
+  const taskLabelID = "task-" + taskNum + "-label";
+  const li = liCreate('task-' + taskNum, '');
+  const taskForm = formCreate(taskFormID, '#');
+  const taskInput = inputCreate(taskInputID, 'checkbox');
+  const taskLabel = labelCreate(taskLabelID, taskInputID, 'TASK ' + taskNum);
 
-// }
+  appendChildren(project, li);
+  appendChildren(li, taskForm);
+  appendChildren(taskForm, taskInput, taskLabel);
 
-// const divElements = [];
+  taskNum++;
+  return taskNum;
+}
+
+let numProjects = 0;
+
+const content = document.getElementById("content");
+const centerPage = divCreate('center-page', '', 'grid-display');
+const pageHeader = divCreate('page-header', '', 'font-andale', 'grid-display');
+const headerText = divCreate('header-text', 'Cullen\'s TODO List', '', '');
+const pageBody = divCreate('page-body', '', 'font-andale');
+const newProjectButton = buttonCreate('new-project-button', createNewProject, '+ New Project', 'font-andale');
+const footer = divCreate('footer', '', '');
+appendChildren(content, centerPage, footer);
+appendChildren(centerPage, pageHeader, pageBody);
+appendChildren(pageHeader, headerText, newProjectButton);
+centerPage.appendChild(pageHeader, pageBody);
+pageHeader.appendChild(headerText, newProjectButton);

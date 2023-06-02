@@ -7,6 +7,10 @@ button {
   cursor: pointer;
 }
 
+label {
+  margin-left: 10px;
+}
+
 ul {
   font-size: 28px;
 }
@@ -43,6 +47,9 @@ body {
   background-color: rgb(8, 143, 143);
   align-items: center;
   justify-content: space-between;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 .flex-column {
@@ -66,7 +73,7 @@ body {
   padding-left: 30px;
   padding-right: 30px;
   grid-template-columns: 1fr;
-  grid-template-rows: 100px 1fr;
+  grid-template-rows: auto 1fr;
 }
 
 #footer {
@@ -80,7 +87,7 @@ body {
   grid-row-end: 1;
   margin-top: 30px;
   grid-template-columns: 10% 10% 10% 10% 10% 10% 10% 10% 10% 10%;
-  grid-template-rows: 1fr;
+  grid-template-rows: auto;
 }
 
 #header-text {
@@ -88,12 +95,16 @@ body {
   display: inline;
   grid-column-start: 4;
   grid-column-end: 8;
+  grid-row-start: 1;
+  grid-row-end: 1;
   text-align: center;
 }
 
 #new-project-button {
   grid-column-start: 8;
   grid-column-end: 11;
+  grid-row-start: 1;
+  grid-row-end: 1;
   font-size: 18px;
   height: 40px;
   width: 170px;
@@ -110,6 +121,7 @@ body {
   grid-row-start: 2;
   grid-row-end: 2;
   margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .grid-display {
