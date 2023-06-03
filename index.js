@@ -16,6 +16,7 @@ class Project {
     this.dueDate = dueDate;
     this.description = description;
     this.priority = priority;
+    this.tasks = [];
   }
   get title() { return this._title; }
   get dueDate() { return this._description; }
@@ -27,9 +28,6 @@ class Project {
   set description(description) { this._description = description; }
   set priority(priority) { this._priority = priority; }
 }
-
-const project = new Project('my', 'dad', 'is', 'gay');
-console.log(project.description);
 
 function addClasses(element, classes) {
   if (classes[0] === '') {
@@ -74,7 +72,7 @@ function liCreate(id, ...classes) {
   return li;
 }
 
-function formCreate(id, action = "#") {
+function formCreate(id, action = "#", ...classes) {
   const form = document.createElement('form');
   form.id = id;
   form.action = action;
@@ -112,36 +110,6 @@ function vertResize() {
     document.body.style.height = heightBody + (heightChange) + 120 + 'px';
     console.log(document.body.clientHeight + 'px');
   }
-
-
-
-
-  // const endHeight = getCenterPageHeight();
-  // const change = endHeight - startHeight;
-  // document.body.style.height = document.body.clientHeight + change + 'px';
-
-  // const heightContent = document.getElementById('content').clientHeight;
-
-  // document.getElementById('content').justifyContent = initial;
-
-
-
-
-
-
-  // if (heightContent > '100vh') {
-  //   document.getElementById('content').style.justifyContent = initial;
-  // }
-
-  // // Increase body height if (centerPage + footer) > content height.
-  // const heightElems = document.getElementById('center-page').clientHeight + document.getElementById('footer').clientHeight;
-  // const heightContentWrapper = document.getElementById('content').clientHeight;
-  // if (heightElems > heightContentWrapper) {
-  //   // Increase body height by heightContents - content.
-  //   const heightChange = heightElems - heightContentWrapper;
-  //   const heightBody = document.body.clientHeight;
-  //   document.body.style.height = heightBody + heightChange + 'px';
-  // }
 }
 
 function createNewProject() {
@@ -151,7 +119,7 @@ function createNewProject() {
   const projectInputID = "project-" + numProjects + "-input";
   const projectLabelID = "project-" + numProjects + "-label";
   const ul = ulCreate('project');
-  const projectForm = formCreate(projectFormID, '#');
+  const projectForm = formCreate(projectFormID, '#', '');
   const projectInput = inputCreate(projectInputID, 'checkbox');
   const projectLabel = labelCreate(projectLabelID, projectInputID, 'PROJECT');
 
@@ -171,7 +139,7 @@ function createNewTask(taskNum, project) {
   const taskInputID = "task-" + taskNum + "-input";
   const taskLabelID = "task-" + taskNum + "-label";
   const li = liCreate('task-' + taskNum, '');
-  const taskForm = formCreate(taskFormID, '#');
+  const taskForm = formCreate(taskFormID, '#', '');
   const taskInput = inputCreate(taskInputID, 'checkbox');
   const taskLabel = labelCreate(taskLabelID, taskInputID, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Non curabitur gravida arcu ac. Dolor purus non enim praesent elementum facilisis. Vitae purus faucibus ornare suspendisse sed. Libero nunc consequat interdum varius sit amet. Nam aliquam sem et tortor consequat id porta nibh. Urna et pharetra pharetra massa massa ultricies. Sollicitudin nibh sit amet commodo nulla facilisi. Imperdiet proin fermentum leo vel orci porta non pulvinar neque. Velit euismod in pellentesque massa placerat duis ultricies lacus sed. Tincidunt praesent semper feugiat nibh.');
 
@@ -192,6 +160,9 @@ const headerText = divCreate('header-text', 'My TODO List', '', '');
 const pageBody = divCreate('page-body', '', 'font-andale');
 const newProjectButton = buttonCreate('new-project-button', createNewProject, '+ New Project', 'font-andale');
 const footer = divCreate('footer', '', '');
+const popupWrapper = divCreate('popup-wrapper');
+const backgroundDim = divCreate('background-dim', '', '');
+const popup = divCreate('popup', '', 'flex-column')
 appendChildren(content, centerPage, footer);
 appendChildren(centerPage, pageHeader, pageBody);
 appendChildren(pageHeader, headerText, newProjectButton);
