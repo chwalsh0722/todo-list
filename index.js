@@ -102,8 +102,51 @@ function appendChildren(parent, ...children) {
   }
 }
 
+function vertResize() {
+  const heightElems = document.getElementById('center-page').clientHeight + document.getElementById('footer').clientHeight;
+  const heightContent = document.getElementById('content').clientHeight;
+
+  if (heightElems > heightContent) {
+    const heightBody = document.body.clientHeight;
+    const heightChange = heightElems - heightContent;
+    document.body.style.height = heightBody + (heightChange) + 120 + 'px';
+    console.log(document.body.clientHeight + 'px');
+  }
+
+
+
+
+  // const endHeight = getCenterPageHeight();
+  // const change = endHeight - startHeight;
+  // document.body.style.height = document.body.clientHeight + change + 'px';
+
+  // const heightContent = document.getElementById('content').clientHeight;
+
+  // document.getElementById('content').justifyContent = initial;
+
+
+
+
+
+
+  // if (heightContent > '100vh') {
+  //   document.getElementById('content').style.justifyContent = initial;
+  // }
+
+  // // Increase body height if (centerPage + footer) > content height.
+  // const heightElems = document.getElementById('center-page').clientHeight + document.getElementById('footer').clientHeight;
+  // const heightContentWrapper = document.getElementById('content').clientHeight;
+  // if (heightElems > heightContentWrapper) {
+  //   // Increase body height by heightContents - content.
+  //   const heightChange = heightElems - heightContentWrapper;
+  //   const heightBody = document.body.clientHeight;
+  //   document.body.style.height = heightBody + heightChange + 'px';
+  // }
+}
+
 function createNewProject() {
   var taskNum = 0;
+
   const projectFormID = "project-" + numProjects + "-form";
   const projectInputID = "project-" + numProjects + "-input";
   const projectLabelID = "project-" + numProjects + "-label";
@@ -120,7 +163,7 @@ function createNewProject() {
   taskNum = createNewTask(taskNum, ul);
   
   numProjects++;
-  console.log("new project created");
+  vertResize();
 }
 
 function createNewTask(taskNum, project) {
@@ -130,7 +173,7 @@ function createNewTask(taskNum, project) {
   const li = liCreate('task-' + taskNum, '');
   const taskForm = formCreate(taskFormID, '#');
   const taskInput = inputCreate(taskInputID, 'checkbox');
-  const taskLabel = labelCreate(taskLabelID, taskInputID, 'TASK ' + taskNum);
+  const taskLabel = labelCreate(taskLabelID, taskInputID, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Non curabitur gravida arcu ac. Dolor purus non enim praesent elementum facilisis. Vitae purus faucibus ornare suspendisse sed. Libero nunc consequat interdum varius sit amet. Nam aliquam sem et tortor consequat id porta nibh. Urna et pharetra pharetra massa massa ultricies. Sollicitudin nibh sit amet commodo nulla facilisi. Imperdiet proin fermentum leo vel orci porta non pulvinar neque. Velit euismod in pellentesque massa placerat duis ultricies lacus sed. Tincidunt praesent semper feugiat nibh.');
 
   appendChildren(project, li);
   appendChildren(li, taskForm);
@@ -145,7 +188,7 @@ let numProjects = 0;
 const content = document.getElementById("content");
 const centerPage = divCreate('center-page', '', 'grid-display');
 const pageHeader = divCreate('page-header', '', 'font-andale', 'grid-display');
-const headerText = divCreate('header-text', 'Cullen\'s TODO List', '', '');
+const headerText = divCreate('header-text', 'My TODO List', '', '');
 const pageBody = divCreate('page-body', '', 'font-andale');
 const newProjectButton = buttonCreate('new-project-button', createNewProject, '+ New Project', 'font-andale');
 const footer = divCreate('footer', '', '');
