@@ -21,9 +21,8 @@ input[type=checkbox], input[type=date] {
 
 input[type=date], input[type=text] {
   font-size: 16px;
+  padding-left: 4px;
 }
-
-input[type=]
 
 ul input[type=checkbox] {
   width: 20px;
@@ -32,10 +31,14 @@ ul input[type=checkbox] {
 }
 
 li {
-  list-style-type: none;
   margin-left: 20px;
   font-size: 20px;
   margin-top: 6px;
+}
+
+ul.project > li,
+ul.flex-column > li.project-form-item {
+  list-style-type: none;
 }
 
 li input[type=checkbox] {
@@ -107,7 +110,7 @@ body {
   text-align: center;
 }
 
-#new-project-button, #popup-form > button.new-task-button {
+#new-project-button, button.popup-form-button {
   font-size: 16px;
   padding: 8px;
   height: 32px;
@@ -118,9 +121,10 @@ body {
   color: white;
 }
 
-#popup-form > button.new-task-button {
+button.popup-form-button {
   width: 125px;
   margin-left: 20px;
+  margin-top: 16px;
 }
 
 #new-project-button {
@@ -163,7 +167,7 @@ body {
 
 #popup {
   width: 600px;
-  height: 600px;
+  height: 800px;
   border-radius: 12px;
   background: white;
   box-shadow: -5px 5px 10px rgba(92, 92, 92, 0.50);
@@ -176,7 +180,7 @@ body {
   margin: 12px;
   overflow: auto;
   grid-template-columns: 1fr;
-  grid-template-rows: 60px 250px auto 60px;
+  grid-template-rows: 60px auto 1fr 60px;
 }
 
 #popup-header {
@@ -185,10 +189,6 @@ body {
   font-size: 30px;
   grid-row-start: 1;
   grid-row-end: 1;
-}
-
-.project-field-label {
-  display: block;
 }
 
 #popup-form > ul {
@@ -203,4 +203,41 @@ ul > li.project-form-item {
 
 ul > li > label.project-field-label {
   margin-left: 0px;
+}
+
+#project-title-label, 
+#project-description-label,
+#project-due-date-label {
+  margin-left: 0px;
+  display: block;
+  font-family: "Andale Mono", monospace;
+}
+
+#project-description-input {
+  padding-left: 4px;
+  padding-right: 4px;
+  font-family: "Andale Mono", monospace;
+  resize: none;
+}
+
+#tasks-wrapper {
+  overflow: auto;
+  padding-left: 20px;
+}
+
+#tasks-list {
+  display: inline;
+}
+
+ol > li {
+  list-style-type: decimal;
+  display: inline;
+}
+
+#popup-footer {
+  grid-row-start: 4;
+  grid-row-end: 4;
+  justify-content: space-between;
+  padding-left: 100px;
+  padding-right: 100px;
 }

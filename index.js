@@ -65,9 +65,19 @@ function ulCreate(...classes) {
   return ul;
 }
 
+function olCreate(id, type, ...classes) {
+  const ol = document.createElement('ol');
+  ol.id = id;
+  ol.type = type;
+  addClasses(ol, classes);
+  return ol;
+}
+
 function liCreate(id, ...classes) {
   const li = document.createElement('li');
-  li.id = id;
+  if (id != '') {
+    li.id = id;
+  }
   addClasses(li, classes);
   return li;
 }
@@ -76,19 +86,36 @@ function formCreate(id, action = "#", ...classes) {
   const form = document.createElement('form');
   form.id = id;
   form.action = action;
+  addClasses(form, classes);
   return form;
 }
 
-function inputCreate(id, type) {
+function inputCreate(id, type, placeholder, size = 20) {
   const input = document.createElement('input');
+  input.placeholder = placeholder;
   input.id = id;
   input.type = type;
+  input.size = size;
   return input;
 }
 
-function labelCreate(id, labelFor, text) {
+function textareaCreate(id, rows, cols, name, placeholder, ...classes) {
+  const textarea = document.createElement('textarea');
+  textarea.id = id;
+  textarea.rows = rows;
+  textarea.cols = cols;
+  textarea.name = name;
+  textarea.placeholder = placeholder;
+  addClasses(textarea, classes);
+  return textarea;
+}
+
+function labelCreate(id, labelFor, text, ...classes) {
   const label = document.createElement('label');
-  label.id = id;
+  if (id != '') {
+    label.id = id;
+  }
+  addClasses(label, classes);
   label.for = labelFor;
   label.innerHTML = text;
   return label;
@@ -112,23 +139,80 @@ function vertResize() {
   }
 }
 
+function addTask() {
+  numTasks++;
+  const task = liCreate('task-' + numTasks, '');
+  const input = inputCreate('task-input-' + numTasks, 'text', 'Task #' + numTasks, 25);
+  input.style.display = 'list-item';
+  const tasksList = document.getElementById('tasks-list');
+  appendChildren(tasksList, task, input);
+  return;
+}
+
+function foo() {
+  return;
+}
+
+function drawNewProjectPopup() {
+  const popupWrapper = divCreate('popup-wrapper', '', 'flex-column');
+  const popup = divCreate('popup', '', 'flex-column');
+  const popupForm = formCreate('popup-form', '#', 'grid-display');
+  const popupHeader = divCreate('popup-header', 'New Project', 'flex-row', 'font-andale');
+  const list = ulCreate('flex-column');
+  const listItems = [
+    liCreate('', 'project-form-item'),
+    liCreate('', 'project-form-item'),
+    liCreate('', 'project-form-item')
+  ];
+  const labels = [
+    labelCreate('project-title-label', 'project-title-input', 'Project Title', 'font-andale'),
+    labelCreate('project-description-label', 'project-description-input', 'Description', 'font-andale'),
+    labelCreate('project-due-date-label', 'project-due-date-input', 'Due Date', 'font-andale')
+  ];
+  const inputs = [
+    inputCreate('project-title-input', 'text', '', 51),
+    textareaCreate('project-description-input', 5, 60, 'project-description-input', 'Description...'),
+    inputCreate('project-due-date-input', 'date', '')
+  ];
+  const tasksWrapper = divCreate('tasks-wrapper', '', 'flex-column');
+  const tasksList = olCreate('tasks-list', '1', '');
+  const addTaskButton = buttonCreate('add-task-button', addTask, '+ Add Task', 'popup-form-button');
+  const popupFooter = divCreate('popup-footer', '', 'flex-row');
+  const submitButton = buttonCreate('submit-button', foo, 'Submit', 'popup-form-button');
+  const cancelButton = buttonCreate('cancel-button', foo, 'Cancel', 'popup-form-button');
+
+  const content = document.getElementById('content');
+  appendChildren(content, popupWrapper);
+  appendChildren(popupWrapper, popup);
+  appendChildren(popup, popupForm);
+  appendChildren(popupForm, popupHeader, list, tasksWrapper, popupFooter);
+  appendChildren(tasksWrapper, tasksList, addTaskButton);
+  appendChildren(list, listItems[0], listItems[1], listItems[2]);
+  appendChildren(listItems[0], labels[0], inputs[0]);
+  appendChildren(listItems[1], labels[1], inputs[1]);
+  appendChildren(listItems[2], labels[2], inputs[2]);
+  appendChildren(popupFooter, submitButton, cancelButton);
+}
+
 function createNewProject() {
-  var taskNum = 0;
+  drawNewProjectPopup();
 
-  const projectFormID = "project-" + numProjects + "-form";
-  const projectInputID = "project-" + numProjects + "-input";
-  const projectLabelID = "project-" + numProjects + "-label";
-  const ul = ulCreate('project');
-  const projectForm = formCreate(projectFormID, '#', '');
-  const projectInput = inputCreate(projectInputID, 'checkbox');
-  const projectLabel = labelCreate(projectLabelID, projectInputID, 'PROJECT');
+  // Create popup window in DOM.
 
-  appendChildren(pageBody, ul);
-  appendChildren(ul, projectForm);
-  appendChildren(projectForm, projectInput, projectLabel);
+  // const projectFormID = "project-" + numProjects + "-form";
+  // const projectInputID = "project-" + numProjects + "-input";
+  // const projectLabelID = "project-" + numProjects + "-label";
+  // const ul = ulCreate('project');
+  // const projectForm = formCreate(projectFormID, '#', '');
+  // const projectInput = inputCreate(projectInputID, 'checkbox');
+  // const projectLabel = labelCreate(projectLabelID, projectInputID, 'PROJECT');
+
+  // appendChildren(pageBody, ul);
+  // appendChildren(ul, projectForm);
+  // appendChildren(projectForm, projectInput, projectLabel);
   
-  taskNum = createNewTask(taskNum, ul);
-  taskNum = createNewTask(taskNum, ul);
+  // taskNum = createNewTask(taskNum, ul);
+  // taskNum = createNewTask(taskNum, ul);
   
   numProjects++;
   vertResize();
@@ -168,3 +252,5 @@ appendChildren(centerPage, pageHeader, pageBody);
 appendChildren(pageHeader, headerText, newProjectButton);
 centerPage.appendChild(pageHeader, pageBody);
 pageHeader.appendChild(headerText, newProjectButton);
+
+let numTasks = 0;

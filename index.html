@@ -9,39 +9,35 @@
 </head>
 <body>
   <div id="content" class="flex-column">
-    <div id="popup-wrapper" class="flex-column">
+    <!-- <div id="popup-wrapper" class="flex-column">
       <div id="popup" class="flex-column">
         <form action="#" id="popup-form" class="grid-display">
           <div id="popup-header" class="flex-row font-andale">New Project</div>
           <ul class="flex-column">
             <li class="project-form-item">
-              <label for="project-title" class="project-field-label font-andale">Project Title</label>
+              <label id="project-title-label" for="project-title" class="project-field-label font-andale">Project Title</label>
               <input type="text" id="project-title">
             </li>
             <li class="project-form-item">
-              <label for="project-description" class="project-field-label font-andale">Description</label>
+              <label id="project-description-label" for="project-description" class="project-field-label font-andale">Description</label>
               <input type="text" id="project-description">
             </li>
             <li class="project-form-item">
-              <label for="project-due-date" class="project-field-label font-andale">Due Date</label>
+              <label id="project-due-date-label" for="project-due-date" class="project-field-label font-andale">Due Date</label>
               <input type="date">
             </li>
           </ul>
-          <button class="new-task-button">+ Add Task</button>
-          <!-- <ul></ul>
-          <ul>Header
-            <li>project title</li>
-            <li>description</li>
-            <li>priority</li>
-            <ul>tasks
-              <li>task1</li>
-              <li>task2</li>
-              <li>task3...</li>
-            </ul>
-          </ul> -->
+          <div id="tasks-wrapper" class="flex-column">
+            <ol id="tasks-list" type="1">
+              <li><input type="text" placeholder="Task 1"></li>
+              <li><input type="text" placeholder="Task 2"></li>
+              <li><input type="text" placeholder="Task 3"></li>
+            </ol>
+            <button id="add-task-button" class="popup-form-button">+ Add Task</button>
+          </div>
         </form>
       </div>
-    </div>
+    </div> -->
   </div>
   <!-- <div class="popup-background"></div> -->
   <script src="./index.js"></script>
