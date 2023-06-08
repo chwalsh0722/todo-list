@@ -113,7 +113,7 @@ body {
 #new-project-button, button.popup-form-button {
   font-size: 16px;
   padding: 8px;
-  height: 32px;
+  height: auto;
   font-weight: bold;
   border-radius: 8px;
   border: none;
@@ -157,7 +157,7 @@ button.popup-form-button {
 }
 
 #popup-wrapper {
-  width: 100%;
+  width: 150%;
   height: 100%; /* set height using javascript */
   position: absolute;
   top: 0px;

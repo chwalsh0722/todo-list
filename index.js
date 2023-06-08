@@ -48,9 +48,10 @@ function divCreate(id, text, ...classes) {
   return div;
 }
 
-function buttonCreate(id, onclick, buttonLabel, ...classes) {
+function buttonCreate(id, type, onclick, buttonLabel, ...classes) {
   const button = document.createElement('button');
   button.id = id;
+  button.type = type;
   button.innerHTML = buttonLabel;
   if (onclick != '') {
     button.onclick = onclick;
@@ -59,8 +60,9 @@ function buttonCreate(id, onclick, buttonLabel, ...classes) {
   return button;
 }
 
-function ulCreate(...classes) {
+function ulCreate(id, ...classes) {
   const ul = document.createElement('ul');
+  ul.id = id;
   addClasses(ul, classes);
   return ul;
 }
@@ -139,6 +141,30 @@ function vertResize() {
   }
 }
 
+// Recursively remove children from parent node.
+function removeChildren(parent, noMoreChildren) {
+  while (parent.hasChildNodes) {
+    let child = parent.firstChild;
+    if (noMoreChildren === true) {
+      parent.removeChild(child);
+      noMorechildren = false;
+    }
+
+    // If parent's child has children, recurse.
+    // Otherwise remove child.
+    if (!noMoreChildren) {
+      if (child != null) {
+        noMoreChildren = removeChildren(child, noMoreChildren);
+      } else {
+        return true;
+      }
+    } else {
+      return false;
+    }
+
+  }
+}
+
 function addTask() {
   numTasks++;
   const task = liCreate('task-' + numTasks, '');
@@ -146,7 +172,70 @@ function addTask() {
   input.style.display = 'list-item';
   const tasksList = document.getElementById('tasks-list');
   appendChildren(tasksList, task, input);
-  return;
+}
+
+function loadUserData(projectTitle, projectDescription, projectDueDate, tasks) {
+  const projectFormID = "project-" + numProjects + "-form";
+  const projectInputID = "project-" + numProjects + "-input";
+  const projectLabelID = "project-" + numProjects + "-label";
+  const ul = ulCreate('project-' + numProjects, 'project');
+  const projectForm = formCreate(projectFormID, '#', '');
+  const projectInput = inputCreate(projectInputID, 'checkbox');
+  const projectLabel = labelCreate(projectLabelID, projectInputID, projectTitle, '');
+
+  appendChildren(pageBody, ul);
+  appendChildren(ul, projectForm);
+  appendChildren(projectForm, projectInput, projectLabel);
+
+  for (let i = 0; i < tasks.length; i++) {
+    taskNum = createNewTask(taskNum, ul);
+  }
+// const projectFormID = "project-" + numProjects + "-form";
+// const projectInputID = "project-" + numProjects + "-input";
+// const projectLabelID = "project-" + numProjects + "-label";
+// const ul = ulCreate('project');
+// const projectForm = formCreate(projectFormID, '#', '');
+// const projectInput = inputCreate(projectInputID, 'checkbox');
+// const projectLabel = labelCreate(projectLabelID, projectInputID, 'PROJECT');
+
+// appendChildren(pageBody, ul);
+// appendChildren(ul, projectForm);
+// appendChildren(projectForm, projectInput, projectLabel);
+
+// taskNum = createNewTask(taskNum, ul);
+// taskNum = createNewTask(taskNum, ul);
+  taskNum = 0;
+}
+
+function transferInputs() {
+  // Store user inputs in variables.
+  const projectTitle = document.getElementById('project-title-input');
+  const projectDescription = document.getElementById('project-description-input');
+  const projectDueDate = document.getElementById('project-due-date-input');
+  const tasksList = document.getElementById('tasks-list');
+  const tasks = [];
+  let tasksnum = tasksList.getElementsByTagName('input');
+  for (let i = 0; i < tasksnum; i++) {
+    let taskPtr = i + 1;
+    const currentTask = document.getElementById('task-input-' + taskPtr).value;
+    tasks.push(currentTask);
+  }
+  const userData = [
+    projectTitle.value,
+    projectDescription.value,
+    projectDueDate.value,
+    tasks
+  ];
+
+  loadUserData(projectTitle.value, projectDescription.value, projectDueDate.value, tasks);
+  closePopup();
+}
+
+function closePopup() {
+  const popupWrapper = document.getElementById('popup-wrapper');
+  const content = document.getElementById('content');
+  let foo = removeChildren(popupWrapper, false);
+  content.removeChild(popupWrapper);
 }
 
 function foo() {
@@ -158,7 +247,7 @@ function drawNewProjectPopup() {
   const popup = divCreate('popup', '', 'flex-column');
   const popupForm = formCreate('popup-form', '#', 'grid-display');
   const popupHeader = divCreate('popup-header', 'New Project', 'flex-row', 'font-andale');
-  const list = ulCreate('flex-column');
+  const list = ulCreate('popup-list', 'flex-column');
   const listItems = [
     liCreate('', 'project-form-item'),
     liCreate('', 'project-form-item'),
@@ -176,10 +265,10 @@ function drawNewProjectPopup() {
   ];
   const tasksWrapper = divCreate('tasks-wrapper', '', 'flex-column');
   const tasksList = olCreate('tasks-list', '1', '');
-  const addTaskButton = buttonCreate('add-task-button', addTask, '+ Add Task', 'popup-form-button');
+  const addTaskButton = buttonCreate('add-task-button', 'button', addTask, '+ Add Task', 'popup-form-button');
   const popupFooter = divCreate('popup-footer', '', 'flex-row');
-  const submitButton = buttonCreate('submit-button', foo, 'Submit', 'popup-form-button');
-  const cancelButton = buttonCreate('cancel-button', foo, 'Cancel', 'popup-form-button');
+  const submitButton = buttonCreate('submit-button', 'button', transferInputs, 'Submit', 'popup-form-button');
+  const cancelButton = buttonCreate('cancel-button', 'button', closePopup, 'Cancel', 'popup-form-button');
 
   const content = document.getElementById('content');
   appendChildren(content, popupWrapper);
@@ -196,25 +285,6 @@ function drawNewProjectPopup() {
 
 function createNewProject() {
   drawNewProjectPopup();
-
-  // Create popup window in DOM.
-
-  // const projectFormID = "project-" + numProjects + "-form";
-  // const projectInputID = "project-" + numProjects + "-input";
-  // const projectLabelID = "project-" + numProjects + "-label";
-  // const ul = ulCreate('project');
-  // const projectForm = formCreate(projectFormID, '#', '');
-  // const projectInput = inputCreate(projectInputID, 'checkbox');
-  // const projectLabel = labelCreate(projectLabelID, projectInputID, 'PROJECT');
-
-  // appendChildren(pageBody, ul);
-  // appendChildren(ul, projectForm);
-  // appendChildren(projectForm, projectInput, projectLabel);
-  
-  // taskNum = createNewTask(taskNum, ul);
-  // taskNum = createNewTask(taskNum, ul);
-  
-  numProjects++;
   vertResize();
 }
 
@@ -242,7 +312,7 @@ const centerPage = divCreate('center-page', '', 'grid-display');
 const pageHeader = divCreate('page-header', '', 'font-andale', 'grid-display');
 const headerText = divCreate('header-text', 'My TODO List', '', '');
 const pageBody = divCreate('page-body', '', 'font-andale');
-const newProjectButton = buttonCreate('new-project-button', createNewProject, '+ New Project', 'font-andale');
+const newProjectButton = buttonCreate('new-project-button', 'button', createNewProject, '+ New Project', 'font-andale');
 const footer = divCreate('footer', '', '');
 const popupWrapper = divCreate('popup-wrapper');
 const backgroundDim = divCreate('background-dim', '', '');
