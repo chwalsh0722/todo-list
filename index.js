@@ -48,6 +48,16 @@ function divCreate(id, text, ...classes) {
   return div;
 }
 
+function pCreate(id, text, ...classes) {
+  const p = document.createElement('p');
+  if (id != '') {
+    p.id = id;
+  }
+  p.text = text;
+  addClasses(p, classes);
+  return p;
+}
+
 function buttonCreate(id, type, onclick, buttonLabel, ...classes) {
   const button = document.createElement('button');
   button.id = id;
@@ -92,12 +102,16 @@ function formCreate(id, action = "#", ...classes) {
   return form;
 }
 
-function inputCreate(id, type, placeholder, size = 20) {
+function inputCreate(id, type, placeholder, size) {
   const input = document.createElement('input');
-  input.placeholder = placeholder;
+  if (placeholder != '') {
+    input.placeholder = placeholder;
+  }
   input.id = id;
   input.type = type;
-  input.size = size;
+  if (size != '') {
+    input.size = size;
+  }
   return input;
 }
 
@@ -174,60 +188,105 @@ function addTask() {
   appendChildren(tasksList, task, input);
 }
 
-function loadUserData(projectTitle, projectDescription, projectDueDate, tasks) {
-  const projectFormID = "project-" + numProjects + "-form";
-  const projectInputID = "project-" + numProjects + "-input";
-  const projectLabelID = "project-" + numProjects + "-label";
-  const ul = ulCreate('project-' + numProjects, 'project');
-  const projectForm = formCreate(projectFormID, '#', '');
-  const projectInput = inputCreate(projectInputID, 'checkbox');
-  const projectLabel = labelCreate(projectLabelID, projectInputID, projectTitle, '');
-
-  appendChildren(pageBody, ul);
-  appendChildren(ul, projectForm);
-  appendChildren(projectForm, projectInput, projectLabel);
-
-  for (let i = 0; i < tasks.length; i++) {
-    taskNum = createNewTask(taskNum, ul);
+function drawUserTODOs(projectTitleValue, projectDescriptionValue, projectDueDateValue, taskInputValues) {
+  // Create elements for each value to be added to list page.
+  numProjects++;
+  let numProjectTasks = 0;
+  let projectIdTemplate = 'project-' + numProjects;
+  const projectWrapper = divCreate(projectIdTemplate, '', 'project-list-wrapper', 'flex-row', 'font-andale');
+  const project = ulCreate(projectIdTemplate + '-list', 'project');
+  const projectForm = formCreate(projectIdTemplate + '-form', '#', '');
+  const projectTitleCheckbox = inputCreate(projectIdTemplate + '-title-checkbox', 'checkbox', '', '');
+  const projectTitleLabel = labelCreate('', projectIdTemplate + '-title-checkbox', projectTitleValue, '');
+  const projectDueDate = divCreate(projectIdTemplate + 'due-date', projectDueDateValue, 'project-due-date');
+  const projectDescription = pCreate('', projectDescriptionValue, 'project-list-description');
+  
+  appendChildren(projectWrapper, project, projectDueDate);
+  appendChildren(project, projectForm);
+  appendChildren(projectForm, projectTitleCheckbox, projectTitleLabel, projectDescription);
+  for (let i = 0; i < taskInputValues.length; i++) {
+    numProjectTasks++;
+    let taskIdTemplate = 'project-' + numProjects + '-task-' + numProjectTasks;
+    const taskListItem = liCreate(taskIdTemplate);
+    const taskItemCheckbox = inputCreate(taskIdTemplate + '-checkbox', 'checkbox', '', '');
+    const taskItemLabel = labelCreate(taskIdTemplate + '-label', taskIdTemplate + '-checkbox', taskInputValues[i], '');
+    appendChildren(projectForm, taskListItem);
+    appendChildren(taskListItem, taskItemCheckbox, taskItemLabel);
   }
-// const projectFormID = "project-" + numProjects + "-form";
-// const projectInputID = "project-" + numProjects + "-input";
-// const projectLabelID = "project-" + numProjects + "-label";
-// const ul = ulCreate('project');
-// const projectForm = formCreate(projectFormID, '#', '');
-// const projectInput = inputCreate(projectInputID, 'checkbox');
-// const projectLabel = labelCreate(projectLabelID, projectInputID, 'PROJECT');
 
-// appendChildren(pageBody, ul);
-// appendChildren(ul, projectForm);
-// appendChildren(projectForm, projectInput, projectLabel);
+  const pageBody = document.getElementById('page-body');
+  appendChildren(pageBody, projectWrapper);
 
-// taskNum = createNewTask(taskNum, ul);
-// taskNum = createNewTask(taskNum, ul);
-  taskNum = 0;
+
+  // const projectFormID = "project-" + numProjects + "-form";
+  // const projectInputID = "project-" + numProjects + "-input";
+  // const projectLabelID = "project-" + numProjects + "-label";
+  // const ul = ulCreate('project-' + numProjects, 'project');
+  // const projectForm = formCreate(projectFormID, '#', '');
+  // const projectInput = inputCreate(projectInputID, 'checkbox');
+  // const projectLabel = labelCreate(projectLabelID, projectInputID, projectTitle, '');
+
+  // appendChildren(pageBody, ul);
+  // appendChildren(ul, projectForm);
+  // appendChildren(projectForm, projectInput, projectLabel);
+
+  // for (let i = 0; i < 10; i++) {
+  // // for (let i = 0; i < tasks.length; i++) {
+  // //   taskNum = createNewTask(taskNum, ul);
+  // // }
+  // // const projectFormID = "project-" + numProjects + "-form";
+  // // const projectInputID = "project-" + numProjects + "-input";
+  // // const projectLabelID = "project-" + numProjects + "-label";
+  // // const ul = ulCreate('project');
+  // // const projectForm = formCreate(projectFormID, '#', '');
+  // // const projectInput = inputCreate(projectInputID, 'checkbox');
+  // // const projectLabel = labelCreate(projectLabelID, projectInputID, 'PROJECT');
+
+  // // appendChildren(pageBody, ul);
+  // // appendChildren(ul, projectForm);
+  // // appendChildren(projectForm, projectInput, projectLabel);
+
+  // // taskNum = createNewTask(taskNum, ul);
+  // // taskNum = createNewTask(taskNum, ul);
+  // }
 }
 
-function transferInputs() {
-  // Store user inputs in variables.
-  const projectTitle = document.getElementById('project-title-input');
-  const projectDescription = document.getElementById('project-description-input');
-  const projectDueDate = document.getElementById('project-due-date-input');
-  const tasksList = document.getElementById('tasks-list');
-  const tasks = [];
-  let tasksnum = tasksList.getElementsByTagName('input');
-  for (let i = 0; i < tasksnum; i++) {
-    let taskPtr = i + 1;
-    const currentTask = document.getElementById('task-input-' + taskPtr).value;
-    tasks.push(currentTask);
-  }
-  const userData = [
-    projectTitle.value,
-    projectDescription.value,
-    projectDueDate.value,
-    tasks
-  ];
+function submitData() {
+  // Get elements that contain user input.
+  const projectTitleValue = document.getElementById('project-title-input').value;
+  const projectDescriptionValue = document.getElementById('project-description-input').value;
+  const projectDueDateValue = document.getElementById('project-due-date-input').value;
+  const numProjectTasks = (document.getElementById('tasks-list').childElementCount) / 2;
+  const taskInputValues = [];
 
-  loadUserData(projectTitle.value, projectDescription.value, projectDueDate.value, tasks);
+  for (let i = 0; i < numProjectTasks; i++) {
+    let taskPtr = i + 1;
+    const currentTaskValue = document.getElementById('task-input-' + taskPtr).value;
+    taskInputValues.push(currentTaskValue);
+  }
+
+  drawUserTODOs(projectTitleValue, projectDescriptionValue, projectDueDateValue, taskInputValues);
+
+  // // Store user inputs in variables.
+  // const projectTitle = document.getElementById('project-title-input');
+  // const projectDescription = document.getElementById('project-description-input');
+  // const projectDueDate = document.getElementById('project-due-date-input');
+  // const tasksList = document.getElementById('tasks-list');
+  // const tasks = [];
+  // let tasksnum = tasksList.getElementsByTagName('input');
+  // for (let i = 0; i < tasksnum; i++) {
+  //   let taskPtr = i + 1;
+  //   const currentTask = document.getElementById('task-input-' + taskPtr).value;
+  //   tasks.push(currentTask);
+  // }
+  // const userData = [
+  //   projectTitle.value,
+  //   projectDescription.value,
+  //   projectDueDate.value,
+  //   tasks
+  // ];
+
+  // loadUserData(projectTitle.value, projectDescription.value, projectDueDate.value, tasks);
   closePopup();
 }
 
@@ -236,6 +295,7 @@ function closePopup() {
   const content = document.getElementById('content');
   let foo = removeChildren(popupWrapper, false);
   content.removeChild(popupWrapper);
+  numTasks = 0;
 }
 
 function foo() {
@@ -261,13 +321,13 @@ function drawNewProjectPopup() {
   const inputs = [
     inputCreate('project-title-input', 'text', '', 51),
     textareaCreate('project-description-input', 5, 60, 'project-description-input', 'Description...'),
-    inputCreate('project-due-date-input', 'date', '')
+    inputCreate('project-due-date-input', 'date', '', '')
   ];
   const tasksWrapper = divCreate('tasks-wrapper', '', 'flex-column');
   const tasksList = olCreate('tasks-list', '1', '');
   const addTaskButton = buttonCreate('add-task-button', 'button', addTask, '+ Add Task', 'popup-form-button');
   const popupFooter = divCreate('popup-footer', '', 'flex-row');
-  const submitButton = buttonCreate('submit-button', 'button', transferInputs, 'Submit', 'popup-form-button');
+  const submitButton = buttonCreate('submit-button', 'button', submitData, 'Submit', 'popup-form-button');
   const cancelButton = buttonCreate('cancel-button', 'button', closePopup, 'Cancel', 'popup-form-button');
 
   const content = document.getElementById('content');
@@ -306,21 +366,24 @@ function createNewTask(taskNum, project) {
 }
 
 let numProjects = 0;
-
-const content = document.getElementById("content");
-const centerPage = divCreate('center-page', '', 'grid-display');
-const pageHeader = divCreate('page-header', '', 'font-andale', 'grid-display');
-const headerText = divCreate('header-text', 'My TODO List', '', '');
-const pageBody = divCreate('page-body', '', 'font-andale');
-const newProjectButton = buttonCreate('new-project-button', 'button', createNewProject, '+ New Project', 'font-andale');
-const footer = divCreate('footer', '', '');
-const popupWrapper = divCreate('popup-wrapper');
-const backgroundDim = divCreate('background-dim', '', '');
-const popup = divCreate('popup', '', 'flex-column')
-appendChildren(content, centerPage, footer);
-appendChildren(centerPage, pageHeader, pageBody);
-appendChildren(pageHeader, headerText, newProjectButton);
-centerPage.appendChild(pageHeader, pageBody);
-pageHeader.appendChild(headerText, newProjectButton);
-
 let numTasks = 0;
+
+function onload() {
+  const content = document.getElementById("content");
+  const centerPage = divCreate('center-page', '', 'grid-display');
+  const pageHeader = divCreate('page-header', '', 'font-andale', 'grid-display');
+  const headerText = divCreate('header-text', 'My TODO List', '', '');
+  const pageBody = divCreate('page-body', '', 'font-andale');
+  const newProjectButton = buttonCreate('new-project-button', 'button', createNewProject, '+ New Project', 'font-andale');
+  const footer = divCreate('footer', '', '');
+  const popupWrapper = divCreate('popup-wrapper');
+  const backgroundDim = divCreate('background-dim', '', '');
+  const popup = divCreate('popup', '', 'flex-column')
+  appendChildren(content, centerPage, footer);
+  appendChildren(centerPage, pageHeader, pageBody);
+  appendChildren(pageHeader, headerText, newProjectButton);
+  centerPage.appendChild(pageHeader, pageBody);
+  pageHeader.appendChild(headerText, newProjectButton);
+}
+
+onload();
