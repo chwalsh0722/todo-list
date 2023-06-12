@@ -53,7 +53,7 @@ function pCreate(id, text, ...classes) {
   if (id != '') {
     p.id = id;
   }
-  p.text = text;
+  p.innerHTML = text;
   addClasses(p, classes);
   return p;
 }
@@ -198,7 +198,7 @@ function drawUserTODOs(projectTitleValue, projectDescriptionValue, projectDueDat
   const projectForm = formCreate(projectIdTemplate + '-form', '#', '');
   const projectTitleCheckbox = inputCreate(projectIdTemplate + '-title-checkbox', 'checkbox', '', '');
   const projectTitleLabel = labelCreate('', projectIdTemplate + '-title-checkbox', projectTitleValue, '');
-  const projectDueDate = divCreate(projectIdTemplate + 'due-date', projectDueDateValue, 'project-due-date');
+  const projectDueDate = divCreate(projectIdTemplate + '-due-date', projectDueDateValue, 'project-due-date');
   const projectDescription = pCreate('', projectDescriptionValue, 'project-list-description');
   
   appendChildren(projectWrapper, project, projectDueDate);
@@ -216,42 +216,13 @@ function drawUserTODOs(projectTitleValue, projectDescriptionValue, projectDueDat
 
   const pageBody = document.getElementById('page-body');
   appendChildren(pageBody, projectWrapper);
-
-
-  // const projectFormID = "project-" + numProjects + "-form";
-  // const projectInputID = "project-" + numProjects + "-input";
-  // const projectLabelID = "project-" + numProjects + "-label";
-  // const ul = ulCreate('project-' + numProjects, 'project');
-  // const projectForm = formCreate(projectFormID, '#', '');
-  // const projectInput = inputCreate(projectInputID, 'checkbox');
-  // const projectLabel = labelCreate(projectLabelID, projectInputID, projectTitle, '');
-
-  // appendChildren(pageBody, ul);
-  // appendChildren(ul, projectForm);
-  // appendChildren(projectForm, projectInput, projectLabel);
-
-  // for (let i = 0; i < 10; i++) {
-  // // for (let i = 0; i < tasks.length; i++) {
-  // //   taskNum = createNewTask(taskNum, ul);
-  // // }
-  // // const projectFormID = "project-" + numProjects + "-form";
-  // // const projectInputID = "project-" + numProjects + "-input";
-  // // const projectLabelID = "project-" + numProjects + "-label";
-  // // const ul = ulCreate('project');
-  // // const projectForm = formCreate(projectFormID, '#', '');
-  // // const projectInput = inputCreate(projectInputID, 'checkbox');
-  // // const projectLabel = labelCreate(projectLabelID, projectInputID, 'PROJECT');
-
-  // // appendChildren(pageBody, ul);
-  // // appendChildren(ul, projectForm);
-  // // appendChildren(projectForm, projectInput, projectLabel);
-
-  // // taskNum = createNewTask(taskNum, ul);
-  // // taskNum = createNewTask(taskNum, ul);
-  // }
+  vertResize();
 }
 
 function submitData() {
+  // Store user inputs using localStorage.
+  populateStorage();
+
   // Get elements that contain user input.
   const projectTitleValue = document.getElementById('project-title-input').value;
   const projectDescriptionValue = document.getElementById('project-description-input').value;
@@ -266,28 +237,20 @@ function submitData() {
   }
 
   drawUserTODOs(projectTitleValue, projectDescriptionValue, projectDueDateValue, taskInputValues);
-
-  // // Store user inputs in variables.
-  // const projectTitle = document.getElementById('project-title-input');
-  // const projectDescription = document.getElementById('project-description-input');
-  // const projectDueDate = document.getElementById('project-due-date-input');
-  // const tasksList = document.getElementById('tasks-list');
-  // const tasks = [];
-  // let tasksnum = tasksList.getElementsByTagName('input');
-  // for (let i = 0; i < tasksnum; i++) {
-  //   let taskPtr = i + 1;
-  //   const currentTask = document.getElementById('task-input-' + taskPtr).value;
-  //   tasks.push(currentTask);
-  // }
-  // const userData = [
-  //   projectTitle.value,
-  //   projectDescription.value,
-  //   projectDueDate.value,
-  //   tasks
-  // ];
-
-  // loadUserData(projectTitle.value, projectDescription.value, projectDueDate.value, tasks);
   closePopup();
+}
+
+function populateStorage() {
+  // Store all form elements using localStorage.
+  localStorage.setItem('project-' + numProjects + '-title', document.getElementById('project-title-input').value);
+  localStorage.setItem('project-' + numProjects + '-description', document.getElementById('project-description-input').value);
+  localStorage.setItem('project-' + numProjects + '-due-date', document.getElementById('project-due-date-input').value);
+  const numProjectTasks = (document.getElementById('tasks-list').childElementCount) / 2;
+  for (let i = 0; i < numProjectTasks; i++) {
+    let taskPtr = i + 1;
+    localStorage.setItem('project-' + numProjects + '-task-' + taskPtr, document.getElementById('task-input-' + taskPtr).value);
+  }
+  console.log('Data saved in local storage.');
 }
 
 function closePopup() {
@@ -345,7 +308,6 @@ function drawNewProjectPopup() {
 
 function createNewProject() {
   drawNewProjectPopup();
-  vertResize();
 }
 
 function createNewTask(taskNum, project) {
@@ -386,4 +348,35 @@ function onload() {
   pageHeader.appendChild(headerText, newProjectButton);
 }
 
+function storageAvailable(type) {
+  let storage;
+  try {
+    storage = window[type];
+    const x = "__storage_test__";
+    storage.setItem(x, x);
+    storage.removeItem(x);
+    console.log('localStorage available');
+    return true;
+  } catch (e) {
+    console.log('localStorage unavailable');
+    return (
+      e instanceof DOMException &&
+      // everything except Firefox
+      (e.code === 22 ||
+        // Firefox
+        e.code === 1014 ||
+        // test name field too, because code might not be present
+        // everything except Firefox
+        e.name === "QuotaExceededError" ||
+        // Firefox
+        e.name ==="NS_ERROR_DOM_QUOTA_REACHED") &&
+      // acknowledge QuotaExceededError only if there's something already stored
+      storage &&
+      storage.length !== 0
+    );
+  }
+}
+
 onload();
+
+storageAvailable("localStorage");
